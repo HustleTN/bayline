@@ -1,4 +1,7 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 
 const capabilities = [
   "Receiving",
@@ -9,83 +12,138 @@ const capabilities = [
 ];
 
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    const setVideoSpeed = () => {
+      video.defaultPlaybackRate = 0.35;
+      video.playbackRate = 0.35;
+    };
+
+    setVideoSpeed();
+
+    video.addEventListener("loadedmetadata", setVideoSpeed);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", setVideoSpeed);
+    };
+  }, []);
+
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-[#090909] text-white">
-      {/* Background texture */}
+      {/* ================================================= */}
+      {/* HERO VIDEO */}
+      {/* ================================================= */}
+
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            "radial-gradient(rgba(255,255,255,0.15) 0.45px, transparent 0.45px)",
-          backgroundSize: "4px 4px",
-        }}
-      />
-
-      {/* Warehouse hero image */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[62%]">
-        <Image
-          src="/images/warehousehero.avif"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-bottom"
-        />
-
-        {/* Fade image naturally into black */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, #090909 0%, rgba(9,9,9,0.96) 8%, rgba(9,9,9,0.72) 24%, rgba(9,9,9,0.22) 46%, rgba(9,9,9,0) 70%)",
-          }}
-        />
-
-        {/* Slight darkening at bottom for capability text */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-[34%]"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(9,9,9,0.68), rgba(9,9,9,0))",
-          }}
-        />
+        className="
+          pointer-events-none
+          absolute inset-x-0 bottom-0
+          z-[1]
+          h-[58%]
+          sm:h-[60%]
+          lg:h-[62%]
+        "
+      >
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className="
+            absolute inset-0
+            h-full w-full
+            object-cover object-bottom
+          "
+        >
+          <source src="/images/heroanimation.mp4" type="video/mp4" />
+        </video>
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col px-5 sm:px-8 lg:px-12">
-        {/* Navigation */}
-        <header className="grid h-[84px] grid-cols-[1fr_auto_1fr] items-center">
-          {/* Desktop navigation */}
-          <nav className="hidden items-center gap-7 md:flex">
+      {/* ================================================= */}
+      {/* CONTENT */}
+      {/* ================================================= */}
+
+      <div
+        className="
+          relative z-10
+          mx-auto flex min-h-[100svh]
+          max-w-[1440px]
+          flex-col
+          px-5
+          sm:px-8
+          lg:px-12
+        "
+      >
+        {/* ================================================= */}
+        {/* NAVIGATION */}
+        {/* ================================================= */}
+
+        <header
+          className="
+            grid h-[82px]
+            grid-cols-[1fr_auto_1fr]
+            items-center
+          "
+        >
+          <nav className="hidden items-center gap-8 md:flex">
             <a
               href="#facility"
-              className="text-[13px] text-white/60 transition-colors duration-200 hover:text-white"
+              className="
+                text-[12px]
+                text-white/52
+                transition-colors duration-200
+                hover:text-white
+              "
             >
               Facility
             </a>
 
             <a
-              href="#services"
-              className="text-[13px] text-white/60 transition-colors duration-200 hover:text-white"
+              href="#loads"
+              className="
+                text-[12px]
+                text-white/52
+                transition-colors duration-200
+                hover:text-white
+              "
             >
               Services
             </a>
 
             <a
               href="#process"
-              className="text-[13px] text-white/60 transition-colors duration-200 hover:text-white"
+              className="
+                text-[12px]
+                text-white/52
+                transition-colors duration-200
+                hover:text-white
+              "
             >
               How It Works
             </a>
           </nav>
 
-          {/* Logo */}
+          {/* Brand */}
           <a
             href="/"
             aria-label="Bayline home"
-            className="justify-self-center text-[28px] leading-none tracking-[-0.045em]"
+            className="
+              justify-self-center
+              text-[28px]
+              leading-none
+              tracking-[-0.05em]
+            "
             style={{
               fontFamily: "var(--font-display)",
+              fontWeight: 400,
             }}
           >
             Bayline
@@ -96,11 +154,17 @@ export default function Hero() {
             <a
               href="#contact"
               className="
-                inline-flex h-[42px] items-center justify-center
-                rounded-[9px] bg-white px-5
-                text-[13px] font-medium text-[#090909]
+                inline-flex h-[40px]
+                items-center justify-center
+                rounded-[7px]
+                bg-white
+                px-5
+                text-[12px]
+                font-medium
+                text-[#090909]
                 transition-all duration-200
-                hover:bg-white/90
+                hover:-translate-y-[1px]
+                hover:bg-[#ececec]
               "
             >
               Request Space
@@ -108,12 +172,28 @@ export default function Hero() {
           </div>
         </header>
 
-        {/* Main content */}
-        <div className="relative z-10 flex flex-1 flex-col items-center pt-[9vh] text-center sm:pt-[10vh] lg:pt-[9vh]">
+        {/* ================================================= */}
+        {/* MAIN HERO */}
+        {/* ================================================= */}
+
+        <div
+          className="
+            relative z-10
+            flex flex-1
+            flex-col
+            items-center
+            pt-[9vh]
+            text-center
+            sm:pt-[10vh]
+            lg:pt-[8vh]
+          "
+        >
           <h1
             className="
-              text-[clamp(5rem,10vw,10rem)]
-              leading-[0.82]
+              max-w-[980px]
+              text-balance
+              text-[clamp(3.5rem,7vw,7rem)]
+              leading-[0.96]
               tracking-[-0.055em]
             "
             style={{
@@ -121,33 +201,42 @@ export default function Hero() {
               fontWeight: 400,
             }}
           >
-            Bayline
+            Warehousing,
+            <br />
+            without the overhead.
           </h1>
 
           <p
             className="
-              mt-8 max-w-[650px]
+              mt-7
+              max-w-[570px]
               text-balance
-              text-[15px] leading-[1.7]
-              text-white/55
+              text-[15px]
+              leading-[1.6]
+              text-white/52
               sm:text-[16px]
             "
           >
-            Flexible warehousing and fulfillment for growing businesses. We
-            receive, store, pick, pack, and dispatch your inventory from one
-            connected facility.
+            Flexible storage and fulfillment for growing businesses. From
+            receiving and inventory management to pick, pack, dispatch, and
+            returns — all from one connected facility.
           </p>
 
-          {/* Hero CTAs */}
-          <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
             <a
               href="#contact"
               className="
-                inline-flex h-[44px] items-center justify-center
-                rounded-[8px] bg-white px-5
-                text-[13px] font-medium text-[#090909]
+                inline-flex h-[45px]
+                items-center justify-center
+                rounded-[7px]
+                bg-white
+                px-6
+                text-[13px]
+                font-medium
+                text-[#090909]
                 transition-all duration-200
-                hover:bg-white/90
+                hover:-translate-y-[1px]
+                hover:bg-[#ececec]
               "
             >
               Request Space
@@ -156,47 +245,71 @@ export default function Hero() {
             <a
               href="#facility"
               className="
-                group inline-flex h-[44px] items-center gap-3
-                rounded-[8px] bg-[#1d1d1d] px-5
-                text-[13px] font-medium text-white
-                transition-colors duration-200
-                hover:bg-[#262626]
+                group inline-flex h-[45px]
+                items-center gap-3
+                rounded-[7px]
+                border border-white/[0.12]
+                px-6
+                text-[13px]
+                font-medium
+                text-white/72
+                transition-all duration-200
+                hover:-translate-y-[1px]
+                hover:border-white/[0.24]
+                hover:text-white
               "
             >
               Explore the Facility
-              <span
+              <ArrowRight
+                size={14}
+                strokeWidth={1.5}
                 className="
-                  flex size-[19px] items-center justify-center
-                  rounded-full bg-white
-                  text-[11px] text-[#090909]
                   transition-transform duration-200
-                  group-hover:translate-x-[2px]
+                  group-hover:translate-x-[3px]
                 "
-              >
-                →
-              </span>
+              />
             </a>
           </div>
         </div>
 
-        {/* Capability strip */}
-        <div className="relative z-10 pb-8 sm:pb-10">
-          <p className="mb-5 text-center text-[12px] text-white/42">
-            Everything your inventory needs under one roof.
-          </p>
+        {/* ================================================= */}
+        {/* CAPABILITIES */}
+        {/* ================================================= */}
 
-          <div
-            className="
-              mx-auto flex max-w-[760px] flex-wrap
-              items-center justify-center
-              gap-x-8 gap-y-3
-              text-[12px] text-white/62
-              sm:gap-x-11
-            "
-          >
-            {capabilities.map((capability) => (
-              <span key={capability}>{capability}</span>
-            ))}
+        <div className="relative z-10 pb-7 sm:pb-9">
+          <div className="mx-auto max-w-[900px] border-t border-white/[0.09] pt-6">
+            <p className="mb-5 text-center text-[11px] text-white/35">
+              Everything your inventory needs under one roof.
+            </p>
+
+            <div
+              className="
+                flex flex-wrap
+                items-center justify-center
+                gap-y-3
+                text-[10px]
+                uppercase
+                tracking-[0.14em]
+                text-white/52
+                sm:flex-nowrap
+              "
+            >
+              {capabilities.map((capability, index) => (
+                <span
+                  key={capability}
+                  className={`
+                    px-4
+                    transition-colors duration-200
+                    hover:text-white
+                    sm:flex-1
+                    sm:px-5
+                    ${index !== 0 ? "sm:border-l sm:border-white/[0.08]" : ""}
+                  `}
+                >
+                  {capability}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
